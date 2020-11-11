@@ -6,9 +6,9 @@
 using namespace std;
 
 //Function declarations
-void add();
+void add(student* b, Node* current);
 void print();
-void delet();
+void delet(int ID, Node* current);
 void average();
 
 //Head node
@@ -30,7 +30,22 @@ int main() {
     cin.getline(input, 99);
     aba = 0;
     if (input[0] == 'a' && input[1] == 'd' && input[2] == 'd') {
-      add();
+      float Gpa1;
+      int Id1;
+      char* NameFirst1;
+      char* NameLast1;
+      NameFirst1 = new char[99];
+      NameLast1 = new char[99];
+      cout << "Enter gpa" << endl;
+      cin >> Gpa1;
+      cout << "Enter id" << endl;
+      cin >> Id1;
+      cout << "Enter first name" << endl;
+      cin >> NameFirst1;
+      cout << "Enter last name" << endl;
+      cin >> NameLast1;
+      student* b = new student(Gpa1, Id1, NameFirst1, NameLast1);
+      add(b, head);
       aba = 1;
     }
     if (input[0] == 'p' && input[1] == 'r' && input[2] == 'i' && input[3] == 'n' &&
@@ -42,7 +57,10 @@ int main() {
     }
     if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l' && input[3] == 'e' &&
 	input[4] == 't' && input[5] == 'e') {
-      delet();
+      int ID;
+      cout << "Enter id" << endl;
+      cin >> ID;
+      delet(ID, head);
       aba = 1;
     }
     if (input[0] == 'a' && input[1] == 'v' && input[2] == 'e' && input[3] == 'r' &&
@@ -52,57 +70,30 @@ int main() {
   }
 }
 //Add a new student
-void add() {
-  float Gpa1;
-  int Id1;
-  char* NameFirst1;
-  char* NameLast1;
-  NameFirst1 = new char[99];
-  NameLast1 = new char[99];
-  cout << "Enter gpa" << endl;
-  cin >> Gpa1;
-  cout << "Enter id" << endl;
-  cin >> Id1;
-  cout << "Enter first name" << endl;
-  cin >> NameFirst1;
-  cout << "Enter last name" << endl;
-  cin >> NameLast1;
-  student* b = new student(Gpa1, Id1, NameFirst1, NameLast1);
-  Node* current = head;
+void add(student* b, Node* current) {
   Node* temp;
-  if (current == NULL) {
+  if (current == head && current == NULL) {
     head = new Node(b);
   }
+  else if (current == head && head->getStudent()->getId() > b->getId()) {
+    temp = head;
+    head = new Node(b);
+    head->setNext(temp);
+  }
+  else if (current == head && head->getNext() == NULL) {
+    head->setNext(new Node(b));
+  }
   else {
-    if (current->getNext() != NULL) {
-      if (current->getStudent()->getId() > Id1) {
-	temp = head;
-	head = new Node(b);
-	head->setNext(temp);
-      }
-      else {
-	while (current->getNext()->getStudent()->getId() < Id1 && current->getNext() != NULL) {
-	  current = current->getNext();
-	}
-	if (current->getNext() != NULL) {
-	  temp = current->getNext();
-	  current->setNext(new Node(b));
-	  current->getNext()->setNext(temp);
-	}
-	else {
-	  current->setNext(new Node(b));
-	}
-      }
+    if (current->getNext() == NULL) {
+      current->setNext(new Node(b));
+    }
+    else if (current->getNext()->getStudent()->getId() > b->getId()) {
+      temp = current->getNext();
+      current->setNext(new Node(b));
+      current->getNext()->setNext(temp);
     }
     else {
-      if (current->getStudent()->getId() > Id1) {
-	temp = head;
-	head = new Node(b);
-	head->setNext(temp);
-      }
-      else {
-	head->setNext(new Node(b));
-      }
+      add(b, current->getNext());
     }
   }
 }
@@ -126,25 +117,21 @@ void print() {
   }
 }
 //Delete a student
-void delet() {
+void delet(int ID, Node* current) {
   Node* temp;
-  Node* current = head;
-  int ID;
-  cout << "Enter id" << endl;
-  cin >> ID;
-  if (head->getStudent()->getId() == ID) {
+  if (current == head && current->getStudent()->getId() == ID) {
     temp = head->getNext();
     head->~Node();
     head = temp;
   }
-  else {
-    while (current->getNext() != NULL) {
-      if (current->getNext()->getStudent()->getId() == ID) {
-	temp = current->getNext()->getNext();
-	current->getNext()->~Node();
-	current->setNext(temp);
-      }
-      current = current->getNext();
+  else if (current->getNext() != NULL) {
+    if (current->getNext()->getStudent()->getId() == ID) {
+      temp = current->getNext()->getNext();
+      current->getNext()->~Node();
+      current->setNext(temp);
+    }
+    else {
+      delet(ID, current->getNext());
     }
   }
 }
