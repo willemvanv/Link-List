@@ -57,8 +57,8 @@ void add() {
   int Id1;
   char* NameFirst1;
   char* NameLast1;
-  NameFirst1 = (char*)malloc(99);
-  NameLast1 = (char*)malloc(99);
+  NameFirst1 = new char[99];
+  NameLast1 = new char[99];
   cout << "Enter gpa" << endl;
   cin >> Gpa1;
   cout << "Enter id" << endl;

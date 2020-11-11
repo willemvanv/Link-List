@@ -5,8 +5,8 @@
 student::student(float Gpa, int Id, char* NameFirst, char* NameLast) {
   gpa = Gpa;
   id = Id;
-  nameFirst = (char*)malloc(99);
-  nameLast = (char*)malloc(99);
+  nameFirst = new char[99];
+  nameLast = new char[99];
   strcpy(nameFirst, NameFirst);
   strcpy(nameLast, NameLast);
 }
