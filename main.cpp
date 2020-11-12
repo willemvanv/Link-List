@@ -6,19 +6,17 @@
 using namespace std;
 
 //Function declarations
-void add(student* b, Node* current);
-void print();
-void delet(int ID, Node* current);
-void average();
-
-//Head node
-Node* head;
+void add(student* b, Node* current, Node* *head);
+void print(Node* head);
+void delet(int ID, Node* current, Node* *head);
+void average(Node* head);
 
 int aba = 0;
 
 int main() {
   //Variables
   bool running = true;
+  Node* head = NULL;
   //Instrctions
   cout << "Commands: add, print, delete, average, quit" << endl;
   while (running == true) {
@@ -46,12 +44,13 @@ int main() {
       cout << "Enter last name" << endl;
       cin >> NameLast1;
       student* b = new student(Gpa1, Id1, NameFirst1, NameLast1);
-      add(b, head);
+      add(b, head, &head);
+      cout << head << endl;
       aba = 1;
     }
     if (input[0] == 'p' && input[1] == 'r' && input[2] == 'i' && input[3] == 'n' &&
 	input[4] == 't') {
-      print();
+      print(head);
     }
     if (input[0] == 'q' && input[1] == 'u' && input[2] == 'i' && input[3] == 't') {
       running = false;
@@ -61,28 +60,29 @@ int main() {
       int ID;
       cout << "Enter id" << endl;
       cin >> ID;
-      delet(ID, head);
+      delet(ID, head, &head);
       aba = 1;
     }
     if (input[0] == 'a' && input[1] == 'v' && input[2] == 'e' && input[3] == 'r' &&
 	input[4] == 'a' && input[5] == 'g' && input[6] == 'e') {
-      average();
+      average(head);
     }
   }
 }
 //Add a new student
-void add(student* b, Node* current) {
+void add(student* b, Node* current, Node* *head) {
   Node* temp;
-  if (current == head && current == NULL) {
-    head = new Node(b);
+  if (current == *head && current == NULL) {
+    *head = new Node(b);
+    cout << *head << endl;
   }
-  else if (current == head && head->getStudent()->getId() > b->getId()) {
-    temp = head;
-    head = new Node(b);
-    head->setNext(temp);
+  else if (current == *head && (*head)->getStudent()->getId() > b->getId()) {
+    temp = *head;
+    *head = new Node(b);
+    (*head)->setNext(temp);
   }
-  else if (current == head && head->getNext() == NULL) {
-    head->setNext(new Node(b));
+  else if (current == *head && (*head)->getNext() == NULL) {
+    (*head)->setNext(new Node(b));
   }
   else {
     if (current->getNext() == NULL) {
@@ -94,12 +94,12 @@ void add(student* b, Node* current) {
       current->getNext()->setNext(temp);
     }
     else {
-      add(b, current->getNext());
+      add(b, current->getNext(), head);
     }
   }
 }
 //Print all students
-void print() {
+void print(Node* head) {
   Node* current = head;
   student* b;
   if (current != NULL) {
@@ -118,12 +118,12 @@ void print() {
   }
 }
 //Delete a student
-void delet(int ID, Node* current) {
+void delet(int ID, Node* current, Node* *head) {
   Node* temp;
-  if (current == head && current->getStudent()->getId() == ID) {
-    temp = head->getNext();
-    head->~Node();
-    head = temp;
+  if (current == *head && current->getStudent()->getId() == ID) {
+    temp = (*head)->getNext();
+    (*head)->~Node();
+    *head = temp;
   }
   else if (current->getNext() != NULL) {
     if (current->getNext()->getStudent()->getId() == ID) {
@@ -132,12 +132,12 @@ void delet(int ID, Node* current) {
       current->setNext(temp);
     }
     else {
-      delet(ID, current->getNext());
+      delet(ID, current->getNext(), head);
     }
   }
 }
 //Average Gpas
-void average() {
+void average(Node* head) {
   float GPA;
   float no;
   Node* current = head;
