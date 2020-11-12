@@ -27,6 +27,7 @@ int main() {
       cout << "Enter a Command" << endl << endl;
     }
     char* input;
+    input = new char[99];
     cin.getline(input, 99);
     aba = 0;
     if (input[0] == 'a' && input[1] == 'd' && input[2] == 'd') {
