@@ -11,10 +11,10 @@ void print(Node* head);
 void delet(int ID, Node* current, Node* *head);
 void average(Node* head);
 
-int aba = 0;
 
 int main() {
   //Variables
+  int aba = 0;
   bool running = true;
   Node* head = NULL;
   //Instrctions
